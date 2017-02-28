@@ -1,8 +1,12 @@
 library stdpatch;
 
+{$IF COMPILERVERSION >= 17}
+  {$DEFINE INLINE}
+{$IFEND}
+
 uses
-  System.SysUtils,
-  Winapi.Windows,
+  SysUtils,
+  Windows,
   Memory,
   Studio.SDK,
   Studio.Funcs,
@@ -19,24 +23,24 @@ begin
   P := StrRScan(Buf, '\');
   if P <> nil then
     P^ := #0;
-
+       
   StrCopy(P, '\stdpatch.ini');
 
   MAXSTUDIOVERTS_NEW := GetPrivateProfileInt('Main', 'MaxStudioVerts', $80000, Buf);
   BUFFERSIZE_NEW := GetPrivateProfileInt('Main', 'BufferSize', $2000000, Buf);
 end;
 
-procedure FailedToFind(const Name: string); inline;
+procedure FailedToFind(const Name: string); {$IFDEF INLINE} inline; {$ENDIF}
 begin
   WriteLn('Failed to find "', Name, '".');
 end;
 
-procedure FailedToPatch(const Name: string); inline;
+procedure FailedToPatch(const Name: string); {$IFDEF INLINE} inline; {$ENDIF}
 begin
   WriteLn('Failed to patch "', Name, '".');
 end;
 
-procedure FailedToHook(const Name: string); inline;
+procedure FailedToHook(const Name: string); {$IFDEF INLINE} inline; {$ENDIF}
 begin
   WriteLn('Failed to hook "', Name, '".');
 end;
@@ -59,9 +63,6 @@ begin
     FailedToFind('AddtToVlist()')
   else
   begin
-    if not Hook_AddToVList then
-      FailedToHook('AddtToVlist()');
-
     if not Find_VList then
       FailedToFind('Vlist');
   end;

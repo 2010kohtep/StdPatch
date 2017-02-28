@@ -11,21 +11,13 @@ const
 
 type
   TWeightList = record
-    Dump: array[0..5252 - 1] of Byte;
-// Name: array[0..MAXSTUDIONAME - 1] of AnsiChar;
-// NumBones: LongInt;
-// BoneName: array[0..MAXWEIGHTSPERLIST - 1] of PAnsiChar;
-// BoneWeight: array[0..MAXWEIGHTSPERLIST - 1] of Single;
-// BonePosWeight: array[0..MAXWEIGHTSPERLIST - 1] of Single;
-//
-// Weight: array[0..MAXWEIGHTSPERLIST - 1] of Single;
-// PosWeight: array[0..MAXWEIGHTSPERLIST - 1] of Single;
+    Dymmy: array[0..5252 - 1] of Byte;
   end;
 
   PVUnify = ^TVUnify;
   TVUnify = record
-    RefCount, LastRef, FirstRef: LongInt;
-    V, M, N, T: LongInt;
+    RefCount, LastRef, FirstRef: Integer;
+    V, M, N, T: Integer;
     Next: PVUnify;
   end;
 
