@@ -283,7 +283,7 @@ var
 begin
   {$IFDEF SAFECODE}
   if Addr = nil then
-    {$IFDEF FATAL} Crash('Int64'); {$ELSE} begin Result := nil; Exit; end; {$ENDIF}
+    {$IFDEF FATAL} Crash('WriteInt64'); {$ELSE} begin Result := nil; Exit; end; {$ENDIF}
   {$ENDIF}
 
   Protect := SetProtect(Addr, PAGE_EXECUTE_READWRITE, SizeOf(Value));
