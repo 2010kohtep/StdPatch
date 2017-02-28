@@ -28,7 +28,7 @@ function WriteLStr(Addr: Pointer; const Value: AnsiString): Pointer; {$IFDEF INL
 function WriteWStr(Addr: Pointer; Value: PWideChar): Pointer;
 function WriteCStr(Addr: Pointer; Value: PAnsiChar): Pointer;
 function WriteBuffer(Addr: Pointer; Buffer: Pointer; Size: Integer): Pointer;
-function Mem_WriteInt64(Addr: Pointer; Value: Int64): Pointer;
+function WriteInt64(Addr: Pointer; Value: Int64): Pointer;
 function WritePointer(Addr, Value: Pointer): Pointer; {$IFDEF INLINE} inline; {$ENDIF}
 function WriteDouble(Addr: Pointer; Value: Double): Pointer;
 function WriteFloat(Addr: Pointer; Value: Single): Pointer;
@@ -277,19 +277,19 @@ begin
   Result := @TByteDynArray(Addr)[Size];
 end;
 
-function Mem_WriteInt64(Addr: Pointer; Value: Int64): Pointer;
+function WriteInt64(Addr: Pointer; Value: Int64): Pointer;
 var
   Protect: Cardinal;
 begin
+  {$IFDEF SAFECODE}
   if Addr = nil then
-    Result := nil
-  else
-  begin
-    Protect := SetProtect(Addr, PAGE_EXECUTE_READWRITE, SizeOf(Value));
-    PInt64(Addr)^ := Value;
-    SetProtect(Addr, Protect, SizeOf(Value));
-    Result := Pointer(LongWord(Addr) + SizeOf(Value));
-  end;
+    {$IFDEF FATAL} Crash('Int64'); {$ELSE} begin Result := nil; Exit; end; {$ENDIF}
+  {$ENDIF}
+
+  Protect := SetProtect(Addr, PAGE_EXECUTE_READWRITE, SizeOf(Value));
+  PInt64(Addr)^ := Value;
+  SetProtect(Addr, Protect, SizeOf(Value));
+  Result := Pointer(LongWord(Addr) + SizeOf(Value));
 end;
 
 function WritePointer(Addr, Value: Pointer): Pointer;
