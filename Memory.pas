@@ -727,7 +727,7 @@ begin
     Dec(Number);
     if Number = 0 then
     begin
-      Transpose(F(Result), Offset);
+      Result := Transpose(F(Result), Offset);
       Exit;
     end;
   until False;
