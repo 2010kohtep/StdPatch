@@ -11,6 +11,7 @@ procedure FindModules;
 function Find_AddrToVlist: Boolean;
 function Find_MAXSTUDIOVERTS: Boolean;
 function Find_BUFFERSIZE: Boolean;
+function Find_MAXFLEXCONTROLLER: Boolean;
 function Find_VList: Boolean;
 function Find_IsInt24: Boolean;
 
@@ -18,6 +19,8 @@ function Patch_SanityCheckVertexBoneLODFlags: Boolean;
 function Hook_VerticesPtrs: Boolean;
 
 function Patch_WriteVTXFile: Boolean;
+function Patch_MAXFLEXCONTROLLER: Boolean;
+function Hook_FlexController: Boolean;
 function Hook_IsInt24: Boolean;
 function Hook_MAXSTUDIOVERTS: Boolean;
 
@@ -113,6 +116,26 @@ begin
     pBUFFERSIZE := Addr;
     BUFFERSIZE_DEF := PCardinal(Addr)^;
   end;
+
+  Result := True;
+end;
+
+function Find_MAXFLEXCONTROLLER: Boolean;
+const
+  Pattern: array[0..7] of Byte = ($81, $FA, $80, $00, $00, $00, $0F, $8D);
+var
+  Addr: Pointer;
+begin
+  Addr := FindPattern(Pointer(Base), Size, @Pattern[0], SizeOf(Pattern), 2);
+
+  if Addr = nil then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  pMAXFLEXCONTROLLER := Addr;
+  MAXFLEXCONTROLLER_DEF := PCardinal(Addr)^;
 
   Result := True;
 end;
@@ -219,6 +242,46 @@ begin
   end
   else
     Result := False;
+end;
+
+function Patch_MAXFLEXCONTROLLER: Boolean;
+begin
+  if pMAXFLEXCONTROLLER = nil then
+    Result := False
+  else
+  begin
+    WriteLong(pMAXFLEXCONTROLLER, MAXFLEXCONTROLLER_NEW);
+    Result := True;
+  end;
+end;
+
+function Hook_FlexController: Boolean;
+const
+  Pattern: array[0..10] of Byte = ($69, $C0, $08, $01, $00, $00, $68, $80, $00, $00, $00);
+var
+  Addr: Pointer;
+begin
+  Addr := FindPattern(Pointer(Base), Size, @Pattern[0], SizeOf(Pattern));
+  Addr := FindBytePtr(Addr, 128, $05, 1);
+
+  if Addr <> nil then
+  begin
+    SetLength(FlexControllerNew, MAXFLEXCONTROLLER_NEW);
+
+    Addr := PPointer(Addr)^;
+
+    if HookRefAddr(Pointer(Base), Size, Addr, @FlexControllerNew[0], True) = 0 then
+    begin
+      SetLength(FlexControllerNew, 0);
+      Result := False;
+    end
+    else
+      Result := True;
+
+    Exit;
+  end;
+
+  Result := False;
 end;
 
 function Hook_IsInt24: Boolean;

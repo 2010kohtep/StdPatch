@@ -8,5 +8,6 @@ The main feature that adds this module - opportunity to compile high-poly models
 
 * Expansion of the array of vertices.
 * Expansion of the array of weights.
+* Expansion of the array of flexcontrollers.
 * Changing the behavior of the IsInt24() function, which can make the compiler crash.
 * Blocking error in SanityCheckVertexBoneLODFlags() function associated with flags.

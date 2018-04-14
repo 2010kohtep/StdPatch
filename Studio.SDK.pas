@@ -14,6 +14,11 @@ type
     Dymmy: array[0..5252 - 1] of Byte;
   end;
 
+  TFlexController = record
+    Name, FlexType: array[0..127] of AnsiChar;
+    Min, Max: Single;
+  end;
+
   PVUnify = ^TVUnify;
   TVUnify = record
     RefCount, LastRef, FirstRef: Integer;
@@ -26,6 +31,9 @@ type
 
   PVUnifyArray = ^TVUnifyArray;
   TVUnifyArray = array of TVUnify;
+
+  PFlexControllerArray = ^TFlexControllerArray;
+  TFlexControllerArray = array of TFlexController;
 
 implementation
 
