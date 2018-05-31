@@ -1,0 +1,69 @@
+#pragma once
+
+#include <Windows.h>
+#include <Studio\SDK.h>
+#include <Utils\Memory.h>
+
+template <typename T> class CArrayHelper
+{
+private:
+	T *m_pData;
+public:
+	CArrayHelper<T>()
+	{
+		m_pData = nullptr;
+	}
+
+	~CArrayHelper()
+	{
+		if (m_pData)
+			free(m_pData);
+	}
+
+	void SetLength(int nNewLength)
+	{
+		if (m_pData)
+			free(m_pData);
+
+		if (nNewLength > 0)
+		{
+			auto nSize = nNewLength * sizeof(*m_pData);
+			m_pData = (T *)malloc(nSize);
+			memset(m_pData, 0, nSize);
+		}
+		else
+		{
+			m_pData = nullptr;
+		}
+	}
+
+	inline T *GetData() { return m_pData; }
+};
+
+extern TModule g_Base;
+
+extern int g_nMAXSTUDIOVERTS_NEW;
+extern int g_nBUFFERSIZE_NEW;
+extern int g_nMAXFLEXCONTROLLER_NEW;
+
+extern int g_nMAXSTUDIOVERTS_DEF;
+extern int g_nBUFFERSIZE_DEF;
+extern int g_nMAXFLEXCONTROLLER_DEF;
+
+extern CArrayHelper<TFlexController> g_FlexControllerNew;
+extern CArrayHelper<TVUnify *> g_VerticesPtrsNew;
+extern CArrayHelper<TVUnify> g_VerticesDataNew;
+extern CArrayHelper<TWeightList> g_WeightList;
+
+extern void *g_pBUFFERSIZE;
+extern void *g_pMAXSTUDIOVERTS;
+extern void *g_pMAXFLEXCONTROLLER;
+
+using TAddToVlist = void *(__cdecl *)(int a1, int a2, int a3, int a4);
+using TIsInt24 = bool(__cdecl *)(int nValue);
+
+extern TAddToVlist g_pfnAddToVlist;
+extern TIsInt24 g_pfnIsInt24;
+
+extern void *g_pVList;
+extern void *g_pFlexController;

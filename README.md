@@ -4,6 +4,8 @@ A small project that I made at the request of one person. This module removes so
 
 The main feature that adds this module - opportunity to compile high-poly models.
 
+Repository consists 2 variants of projects: Visual C++ and Delphi (obsolete since 1.3.0).
+
 ## List of compiler improvements
 
 * Expansion of the array of vertices.

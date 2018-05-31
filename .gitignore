@@ -1,4 +1,9 @@
+.vs/
 __history/
+Win32/
+bin/
+Debug/
+Release/
 *.dcu
 *.stat
 *.res

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{a6c88087-a9dd-4a50-acb0-70f7f5d60251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Studio">
+      <UniqueIdentifier>{6772934b-6f5c-40cc-a41b-61dea0ca2255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{19636d7d-e272-48fe-8530-bb3527a2cbfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Common">
+      <UniqueIdentifier>{0b0e0165-7dde-48fd-bfc8-c95b70cd5aa1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\StdPatch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Studio\Patch.cpp">
+      <Filter>src\Studio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\Memory.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Studio\Global.cpp">
+      <Filter>src\Studio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Studio\Funcs.cpp">
+      <Filter>src\Studio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\String.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Studio\Exception.cpp">
+      <Filter>src\Studio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utils\File.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Studio\Detour.cpp">
+      <Filter>src\Studio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Studio\Patch.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\Memory.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Studio\Global.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Studio\SDK.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Studio\Funcs.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Common\Defines.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Common\Console.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\String.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Studio\Exception.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utils\File.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Common\RTTI.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Studio\Detour.h">
+      <Filter>src\Studio</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
