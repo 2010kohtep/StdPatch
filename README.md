@@ -13,3 +13,5 @@ Repository consists 2 variants of projects: Visual C++ and Delphi (obsolete sinc
 * Expansion of the array of flexcontrollers.
 * Changing the behavior of the IsInt24() function, which can make the compiler crash.
 * Blocking error in SanityCheckVertexBoneLODFlags() function associated with flags.
+* Vectored exceptions for more detailed description of the compilation error (since 2.0.0).
+* Debug events for some compiler functions (since 2.0.0).
