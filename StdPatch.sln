@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdPatch", "msvc\StdPatch.vcxproj", "{99A544D0-0889-4D01-A323-2F817B1A3686}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdInjector", "StdInjector\msvc\StdInjector.vcxproj", "{EC9E8735-5F02-4EC3-836A-C569C17BF2DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdPatch", "StdPatch\msvc\StdPatch.vcxproj", "{99A544D0-0889-4D01-A323-2F817B1A3686}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +13,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC9E8735-5F02-4EC3-836A-C569C17BF2DB}.Debug|x86.ActiveCfg = Debug|Win32
+		{EC9E8735-5F02-4EC3-836A-C569C17BF2DB}.Debug|x86.Build.0 = Debug|Win32
+		{EC9E8735-5F02-4EC3-836A-C569C17BF2DB}.Release|x86.ActiveCfg = Release|Win32
+		{EC9E8735-5F02-4EC3-836A-C569C17BF2DB}.Release|x86.Build.0 = Release|Win32
 		{99A544D0-0889-4D01-A323-2F817B1A3686}.Debug|x86.ActiveCfg = Debug|Win32
 		{99A544D0-0889-4D01-A323-2F817B1A3686}.Debug|x86.Build.0 = Debug|Win32
 		{99A544D0-0889-4D01-A323-2F817B1A3686}.Release|x86.ActiveCfg = Release|Win32
