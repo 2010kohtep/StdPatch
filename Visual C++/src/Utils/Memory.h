@@ -107,7 +107,7 @@ namespace Memory
 
 	PVOID FindPushOffset(TModule& module, const char *szStr);
 
-	PVOID FindRefAddr(void *pStart, void *pEnd, void *reference, byte header);
+	PVOID FindRefAddr(void *pStart, void *pEnd, void *reference, BYTE header);
 	PVOID FindRefAddr(TModule& module, PVOID addr);
 	PVOID FindRefCall(TModule& module, PVOID addr);
 	PVOID FindRefJump(TModule& module, PVOID addr);

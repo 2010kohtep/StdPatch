@@ -42,6 +42,9 @@
     <ClCompile Include="..\src\Studio\Detour.cpp">
       <Filter>src\Studio</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\precompiled.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Studio\Patch.h">
@@ -79,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Studio\Detour.h">
       <Filter>src\Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\precompiled.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Common\ArrayHelper.h">
+      <Filter>src\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

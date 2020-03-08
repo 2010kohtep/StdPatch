@@ -1,8 +1,4 @@
-#include <Windows.h>
-#include <Utils/String.h>
-#include <Common/Console.h>
-#include <Common/RTTI.h>
-#include <Studio/Global.h>
+#include "precompiled.h"
 
 LONG NTAPI VectorExceptionFilter(_EXCEPTION_POINTERS *pException)
 {

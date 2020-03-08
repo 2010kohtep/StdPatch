@@ -1,3 +1,3 @@
 #pragma once
 
-inline bool FileExists(const char *pszName);
+bool FileExists(const char *pszName);

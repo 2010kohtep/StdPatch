@@ -1,4 +1,4 @@
-#include "Memory.h"
+#include "precompiled.h"
 
 namespace Memory
 {
@@ -242,7 +242,7 @@ namespace Memory
 		DWORD(__fastcall *f)(DWORD X) = !back ? &Inc : &Dec;
 
 		INT size = module.uSize;
-		PVOID addr = &((byte*)p)[size];
+		PVOID addr = &((BYTE *)p)[size];
 
 		if (IsValidPtr((FARPROC)addr))
 		{
@@ -272,7 +272,7 @@ namespace Memory
 		DWORD(__fastcall *f)(DWORD X) = !back ? &Inc : &Dec;
 
 		INT size = module.uSize;
-		PVOID addr = &((byte*)p)[size];
+		PVOID addr = &((BYTE *)p)[size];
 
 		if (IsValidPtr((FARPROC)addr))
 		{
@@ -302,7 +302,7 @@ namespace Memory
 		DWORD(__fastcall *f)(DWORD X) = !back ? &Inc : &Dec;
 
 		INT size = module.uSize;
-		PVOID addr = &((byte*)p)[size];
+		PVOID addr = &((BYTE *)p)[size];
 
 		if (IsValidPtr((FARPROC)addr))
 		{
@@ -477,8 +477,8 @@ namespace Memory
 	{
 		for (int i = 0; i < len; i++)
 		{
-			byte destbyte = ((PBYTE)dest)[i];
-			byte srcbyte = ((PBYTE)src)[i];
+			BYTE destbyte = ((PBYTE)dest)[i];
+			BYTE srcbyte = ((PBYTE)src)[i];
 
 			if (srcbyte != 0xFF)
 			{
@@ -524,7 +524,7 @@ namespace Memory
 		return FindPattern(module, a, sizeof(a), 0);
 	}
 
-	PVOID FindRefAddr(void *pStart, void *pEnd, void *reference, byte header = 0x00)
+	PVOID FindRefAddr(void *pStart, void *pEnd, void *reference, BYTE header = 0x00)
 	{
 		if (!pStart)
 			return nullptr;
@@ -532,7 +532,7 @@ namespace Memory
 		if (!reference)
 			return nullptr;
 
-		auto pAddr = (byte *)pStart;
+		auto pAddr = (BYTE *)pStart;
 		pEnd = Transpose(pEnd, -5);
 
 		if (header == 0x00)

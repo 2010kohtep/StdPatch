@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include "precompiled.h"
 
 int ExtractFileName(const char* pszSource, char* pszDest)
 {

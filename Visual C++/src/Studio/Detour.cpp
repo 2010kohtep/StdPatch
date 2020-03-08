@@ -1,8 +1,4 @@
-#include <Studio/SDK.h>
-#include <Studio/Global.h>
-#include <Common/Console.h>
-#include <Utils/Memory.h>
-#include <Windows.h>
+#include "precompiled.h"
 
 class COptimizedModel;
 using TCOptimizedModel_WriteVTXFile = void(__fastcall *)(COptimizedModel *, int, studiohdr_t *, LPCSTR, TotalMeshStats_t *);

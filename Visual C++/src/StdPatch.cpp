@@ -1,19 +1,4 @@
-#include <Windows.h>
-#include <iostream>
-
-#include <Common/Console.h>
-#include <Common/RTTI.h>
-
-#include <Utils/Memory.h>
-#include <Utils/String.h>
-#include <Utils/File.h>
-
-#include <Studio/Global.h>
-#include <Studio/Patch.h>
-#include <Studio/SDK.h>
-#include <Studio/Funcs.h>
-#include <Studio/Exception.h>
-#include <Studio/Detour.h>
+#include "precompiled.h"
 
 void LoadConfig()
 {

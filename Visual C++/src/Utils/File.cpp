@@ -1,4 +1,4 @@
-#include <io.h>
+#include "precompiled.h"
 
 bool FileExists(const char *pszName)
 {

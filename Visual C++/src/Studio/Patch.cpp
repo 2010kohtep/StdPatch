@@ -1,11 +1,4 @@
-#include "Patch.h"
-
-#include <Utils/Memory.h>
-#include <Studio/Global.h>
-#include <Studio/Funcs.h>
-
-#include <Common/Defines.h>
-#include <Common/Console.h>
+#include "precompiled.h"
 
 void FindModules()
 {

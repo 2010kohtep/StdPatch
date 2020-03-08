@@ -1,8 +1,4 @@
-#include <iostream>
-#include <Common/Defines.h>
-#include <Common/Console.h>
-#include <intrin.h>
-#include <Studio/Global.h>
+#include "precompiled.h"
 
 void __cdecl SanityCheckVertexBoneLODFlags_MdlError(const char *pszMsg, ...)
 {
