@@ -34,12 +34,28 @@ void LoadConfig()
 	}
 }
 
+bool IsSFM()
+{
+	if (g_Base.pStart == nullptr)
+		return false;
+
+	return GetVTableForClass(g_Base, "CSFMBaseImporter") != nullptr;
+}
+
 void PatchStudioMdl()
 {
-	Print("StudioMdl Patcher 2.0.0 is started.\n");
+	Print("StudioMdl Patcher 2.1.0 is started.\n");
 	Print("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
 	FindModules();
+
+	if (!IsSFM())
+	{
+		MessageBoxA(HWND_DESKTOP, "StdPatch available only for Source Filmmaker compiler. Aborting...", "Error",
+			MB_YESNO | MB_SYSTEMMODAL);
+
+		return;
+	}
 
 	InsertExceptionHandler();
 	InsertDebugEvents();
