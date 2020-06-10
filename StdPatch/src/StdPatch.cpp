@@ -22,6 +22,7 @@ void LoadConfig()
 	if (FileExists(szBuf))
 	{
 		g_nMAXSTUDIOVERTS_NEW = GetPrivateProfileIntA("Main", "MaxStudioVerts", (1024 * 512), szBuf);
+		g_nMAXMATERIALSCOUNT_NEW = GetPrivateProfileIntA("Main", "MaxMaterials", 127, szBuf);
 		g_nBUFFERSIZE_NEW = GetPrivateProfileIntA("Main", "BufferSize", (1024 * 1024 * 32), szBuf);
 		g_nMAXFLEXCONTROLLER_NEW = GetPrivateProfileIntA("Main", "FlexControllerSize", 400, szBuf);
 	}
@@ -30,8 +31,15 @@ void LoadConfig()
 		DbgTrace("Warning! 'StdPatch.ini' configuration file could not be found, creating one with default values for patching.\n");
 
 		WritePrivateProfileStringA("Main", "MaxStudioVerts", "524288", szBuf);
+		WritePrivateProfileStringA("Main", "MaxMaterials", "127", szBuf);
 		WritePrivateProfileStringA("Main", "BufferSize", "33554432", szBuf);
 		WritePrivateProfileStringA("Main", "FlexControllerSize", "400", szBuf);
+	}
+
+	if (g_nMAXMATERIALSCOUNT_NEW > 127)
+	{
+		DbgTrace("Warning! Materials limit can't be more than 127, but received %d. Setting to 127...\n", g_nMAXMATERIALSCOUNT_NEW);
+		g_nMAXMATERIALSCOUNT_NEW = 127;
 	}
 }
 
@@ -55,11 +63,58 @@ VOID WINAPI hkOutputDebugStringA(LPCSTR lpOutputString)
 void Hook_OutputDebugStringA()
 {
 	orgOutputDebugStringA = decltype(orgOutputDebugStringA)(gKernelDll->HookExport("OutputDebugStringA", hkOutputDebugStringA));
-
 }
+
+bool Find_MaterialsList()
+{
+	ISearchPattern *pattern;
+
+	pattern = gStudioExe->CreatePattern(g_pMaterialsList);
+	{
+		pattern->FindAnsiString("face %d references NULL texture %d\n", kPatternFlagsStringRef);
+		pattern->FindCall(0, true, true);
+		pattern->FindUInt16(0x868D);
+		pattern->Transpose(2);
+		pattern->Dereference();
+	}
+
+	if (!g_pMaterialsList)
+		return false;
+
+	pattern = gStudioExe->CreatePattern(g_pMaterialsListCheck);
+	{
+		pattern->FindAnsiString("Too many materials used, max %d\n", kPatternFlagsStringRef);
+	}
+
+	if (!g_pMaterialsListCheck)
+		return false;
+
+	g_nMAXMATERIALSCOUNT_DEF = *(uint8_t *)Transpose(g_pMaterialsListCheck, -2);
+
+	return true;
+}
+
+bool Patch_MaterialsList()
+{
+	if (!g_pMaterialsList || !g_pMaterialsListCheck)
+		return false;
+
+	g_MaterialsList.SetLength(g_nMAXMATERIALSCOUNT_NEW);
+
+	if (gStudioExe->HookRefAddr(g_pMaterialsList, g_MaterialsList.GetData(), 0x00) == 0)
+	{
+		g_MaterialsList.SetLength(0);
+		return false;
+	}
+
+	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -2);
+	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -6);
+	return true;
+}
+
 void PatchStudioMdl()
 {
-	DbgTrace("StudioMdl Patcher 2.2.0 is started.\n");
+	DbgTrace("StudioMdl Patcher 2.3.0 is started.\n");
 	DbgTrace("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
 	FindModules();
@@ -122,6 +177,14 @@ void PatchStudioMdl()
 
 	if (!Patch_SanityCheckVertexBoneLODFlags())
 		FailedToFind("SanityCheckVertexBoneLODFlags()");
+
+	if (!Find_MaterialsList())
+		FailedToPatch("MaterialsList");
+	else
+	{
+		if (!Patch_MaterialsList())
+			FailedToHook("MaterialsList");
+	}
 
 	DbgTrace("\n");
 }

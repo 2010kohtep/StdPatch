@@ -141,3 +141,8 @@ struct TotalMeshStats_t
 	int m_TotalBoneStateChanges;
 	int m_TotalMaterialReplacements;
 };
+
+struct TMaterialInfo
+{
+	unsigned char dummy[288];
+};
