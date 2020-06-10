@@ -1,4 +1,4 @@
-#include "precompiled.h"
+#include <corecrt_io.h> // _access
 
 bool FileExists(const char *pszName)
 {

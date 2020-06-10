@@ -86,8 +86,9 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
@@ -121,8 +122,9 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -144,35 +146,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\precompiled.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\src\Common\Console.cpp" />
+    <ClCompile Include="..\src\Common\File.cpp" />
+    <ClCompile Include="..\src\Common\Memory.cpp" />
+    <ClCompile Include="..\src\Common\RTTI.cpp" />
+    <ClCompile Include="..\src\Common\String.cpp" />
+    <ClCompile Include="..\src\main\Detour.cpp" />
+    <ClCompile Include="..\src\main\Exception.cpp" />
+    <ClCompile Include="..\src\main\Funcs.cpp" />
+    <ClCompile Include="..\src\main\Global.cpp" />
+    <ClCompile Include="..\src\main\Patch.cpp" />
+    <ClCompile Include="..\src\public\opcode_len_calc.cpp" />
     <ClCompile Include="..\src\StdPatch.cpp" />
-    <ClCompile Include="..\src\Studio\Detour.cpp" />
-    <ClCompile Include="..\src\Studio\Exception.cpp" />
-    <ClCompile Include="..\src\Studio\Funcs.cpp" />
-    <ClCompile Include="..\src\Studio\Global.cpp" />
-    <ClCompile Include="..\src\Studio\Patch.cpp" />
-    <ClCompile Include="..\src\Utils\File.cpp" />
-    <ClCompile Include="..\src\Utils\Memory.cpp" />
-    <ClCompile Include="..\src\Utils\String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Common\ArrayHelper.h" />
     <ClInclude Include="..\src\Common\Console.h" />
     <ClInclude Include="..\src\Common\Defines.h" />
+    <ClInclude Include="..\src\Common\File.h" />
+    <ClInclude Include="..\src\Common\Memory.h" />
     <ClInclude Include="..\src\Common\RTTI.h" />
-    <ClInclude Include="..\src\precompiled.h" />
-    <ClInclude Include="..\src\Studio\Detour.h" />
-    <ClInclude Include="..\src\Studio\Exception.h" />
-    <ClInclude Include="..\src\Studio\Funcs.h" />
-    <ClInclude Include="..\src\Studio\Global.h" />
-    <ClInclude Include="..\src\Studio\Patch.h" />
-    <ClInclude Include="..\src\Studio\SDK.h" />
-    <ClInclude Include="..\src\Utils\File.h" />
-    <ClInclude Include="..\src\Utils\Memory.h" />
-    <ClInclude Include="..\src\Utils\String.h" />
+    <ClInclude Include="..\src\Common\String.h" />
+    <ClInclude Include="..\src\main\Detour.h" />
+    <ClInclude Include="..\src\main\Exception.h" />
+    <ClInclude Include="..\src\main\Funcs.h" />
+    <ClInclude Include="..\src\main\Global.h" />
+    <ClInclude Include="..\src\main\Patch.h" />
+    <ClInclude Include="..\src\main\SDK.h" />
+    <ClInclude Include="..\src\public\opcode_len_calc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

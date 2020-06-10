@@ -1,4 +1,8 @@
-#include "precompiled.h"
+#include "common/Console.h"
+#include "common/Memory.h"
+
+#include "main/SDK.h"
+#include "main/Global.h"
 
 class COptimizedModel;
 using TCOptimizedModel_WriteVTXFile = void(__fastcall *)(COptimizedModel *, int, studiohdr_t *, LPCSTR, TotalMeshStats_t *);
@@ -7,23 +11,23 @@ TCOptimizedModel_WriteVTXFile orgCOptimizedModel_WriteVTXFile;
 
 void __fastcall COptimizedModel_WriteVTXFile(COptimizedModel *pSelf, int, studiohdr_t *pHdr, const char *pszFileName, TotalMeshStats_t *pStats)
 {
-	Print("Begin: COptimizedModel::WriteVTXFile\n");
+	DbgTrace("Begin: COptimizedModel::WriteVTXFile\n");
 
-	Print("\t\tTotalBodyParts = %d\n", pStats->m_TotalBodyParts);
-	Print("\t\tTotalModels = %d\n", pStats->m_TotalModels);
-	Print("\t\tTotalModelLODs = %d\n", pStats->m_TotalModelLODs);
-	Print("\t\tTotalMeshes = %d\n", pStats->m_TotalMeshes);
-	Print("\t\tTotalStrips = %d\n", pStats->m_TotalStrips);
-	Print("\t\tTotalStripGroups = %d\n", pStats->m_TotalStripGroups);
-	Print("\t\tTotalVerts = %d\n", pStats->m_TotalVerts);
-	Print("\t\tTotalIndices = %d\n", pStats->m_TotalIndices);
-	Print("\t\tTotalTopology = %d\n", pStats->m_TotalTopology);
-	Print("\t\tTotalBoneStateChanges = %d\n", pStats->m_TotalBoneStateChanges);
-	Print("\t\tTotalMaterialReplacements = %d\n", pStats->m_TotalMaterialReplacements);
+	DbgTrace("\t\tTotalBodyParts = %d\n", pStats->m_TotalBodyParts);
+	DbgTrace("\t\tTotalModels = %d\n", pStats->m_TotalModels);
+	DbgTrace("\t\tTotalModelLODs = %d\n", pStats->m_TotalModelLODs);
+	DbgTrace("\t\tTotalMeshes = %d\n", pStats->m_TotalMeshes);
+	DbgTrace("\t\tTotalStrips = %d\n", pStats->m_TotalStrips);
+	DbgTrace("\t\tTotalStripGroups = %d\n", pStats->m_TotalStripGroups);
+	DbgTrace("\t\tTotalVerts = %d\n", pStats->m_TotalVerts);
+	DbgTrace("\t\tTotalIndices = %d\n", pStats->m_TotalIndices);
+	DbgTrace("\t\tTotalTopology = %d\n", pStats->m_TotalTopology);
+	DbgTrace("\t\tTotalBoneStateChanges = %d\n", pStats->m_TotalBoneStateChanges);
+	DbgTrace("\t\tTotalMaterialReplacements = %d\n", pStats->m_TotalMaterialReplacements);
 
 	orgCOptimizedModel_WriteVTXFile(pSelf, 0, pHdr, pszFileName, pStats);
 
-	Print("End: COptimizedModel::WriteVTXFile\n");
+	DbgTrace("End: COptimizedModel::WriteVTXFile\n");
 }
 
 void InsertDebugEvents()

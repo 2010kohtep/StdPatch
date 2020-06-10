@@ -1,6 +1,9 @@
 #pragma once
 
-template <typename T> class CArrayHelper
+#include <stdlib.h> // free, malloc
+
+template <typename T> 
+class CArrayHelper
 {
 private:
 	T *m_pData;

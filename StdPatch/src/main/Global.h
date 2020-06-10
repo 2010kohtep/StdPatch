@@ -1,5 +1,10 @@
 #pragma once
 
+#include "common/Memory.h"
+#include "common/ArrayHelper.h"
+
+#include "main/SDK.h"
+
 extern TModule g_Base;
 
 extern int g_nMAXSTUDIOVERTS_NEW;

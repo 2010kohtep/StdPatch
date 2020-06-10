@@ -1,14 +1,6 @@
 #pragma once
 
-#ifndef _CRT_SECURE_NO_WARNINGS
-	#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include <Windows.h>
-
-#define ASM_PUSH ((unsigned char)0x68)
-#define ASM_CALL ((unsigned char)0xE8)
-#define ASM_JUMP ((unsigned char)0xE9)
 
 struct TModule
 {

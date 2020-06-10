@@ -1,4 +1,4 @@
-#include "precompiled.h"
+#include "main/Global.h"
 
 TModule g_Base;
 

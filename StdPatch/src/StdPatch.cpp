@@ -1,4 +1,13 @@
-#include "precompiled.h"
+#include <Windows.h>
+
+#include "common/File.h"
+#include "common/RTTI.h"
+#include "common/Console.h"
+
+#include "main/Global.h"
+#include "main/Patch.h"
+#include "main/Exception.h"
+#include "main/Detour.h"
 
 void LoadConfig()
 {
@@ -13,8 +22,8 @@ void LoadConfig()
 
 	if (FileExists(szBuf))
 	{
-		g_nMAXSTUDIOVERTS_NEW = GetPrivateProfileIntA("Main", "MaxStudioVerts", 0x80000, szBuf);
-		g_nBUFFERSIZE_NEW = GetPrivateProfileIntA("Main", "BufferSize", 2000000, szBuf);
+		g_nMAXSTUDIOVERTS_NEW = GetPrivateProfileIntA("Main", "MaxStudioVerts", (1024 * 512), szBuf);
+		g_nBUFFERSIZE_NEW = GetPrivateProfileIntA("Main", "BufferSize", (1024 * 1024 * 32), szBuf);
 		g_nMAXFLEXCONTROLLER_NEW = GetPrivateProfileIntA("Main", "FlexControllerSize", 400, szBuf);
 	}
 }
@@ -29,8 +38,8 @@ bool IsSFM()
 
 void PatchStudioMdl()
 {
-	Print("StudioMdl Patcher 2.1.0 is started.\n");
-	Print("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
+	DbgTrace("StudioMdl Patcher 2.1.0 is started.\n");
+	DbgTrace("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
 	FindModules();
 
@@ -94,7 +103,7 @@ void PatchStudioMdl()
 	if (!Patch_SanityCheckVertexBoneLODFlags())
 		FailedToFind("SanityCheckVertexBoneLODFlags()");
 
-	Print("\n");
+	DbgTrace("\n");
 }
 
 BOOL WINAPI DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)

@@ -1,4 +1,10 @@
-#include "precompiled.h"
+#include <windows.h>
+
+#include "common/RTTI.h"
+#include "common/Console.h"
+#include "common/String.h"
+
+#include "main/Global.h"
 
 LONG NTAPI VectorExceptionFilter(_EXCEPTION_POINTERS *pException)
 {
@@ -21,7 +27,7 @@ LONG NTAPI VectorExceptionFilter(_EXCEPTION_POINTERS *pException)
 	GetModuleFileNameA(hBase, szBuf, sizeof(szBuf));
 	ExtractFileName(szBuf, szBuf);
 
-	Print("Exception happened and stdpatch catched it."
+	DbgTrace("Exception happened and stdpatch catched it."
 		"\n\t\tCode: 0x%p"
 		"\n\t\tModule: %s"
 		"\n\t\tBase: 0x%p"

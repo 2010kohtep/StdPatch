@@ -1,4 +1,7 @@
-#include "precompiled.h"
+#include <Windows.h>
+
+#include "main/Global.h"
+#include "main/Funcs.h"
 
 void FindModules()
 {

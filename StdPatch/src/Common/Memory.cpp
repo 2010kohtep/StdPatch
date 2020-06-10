@@ -1,4 +1,14 @@
-#include "precompiled.h"
+#include <Windows.h>
+
+#include "Memory.h"
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+const BYTE ASM_PUSH = 0x68;
+const BYTE ASM_CALL = 0xE8;
+const BYTE ASM_JUMP = 0xE9;
 
 namespace Memory
 {
