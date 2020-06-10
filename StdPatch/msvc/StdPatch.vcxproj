@@ -149,7 +149,8 @@
     <ClCompile Include="..\src\Common\Console.cpp" />
     <ClCompile Include="..\src\Common\File.cpp" />
     <ClCompile Include="..\src\Common\Memory.cpp" />
-    <ClCompile Include="..\src\Common\RTTI.cpp" />
+    <ClCompile Include="..\src\common\MemSearch.cpp" />
+    <ClCompile Include="..\src\common\MemTools.cpp" />
     <ClCompile Include="..\src\Common\String.cpp" />
     <ClCompile Include="..\src\main\Detour.cpp" />
     <ClCompile Include="..\src\main\Exception.cpp" />
@@ -165,7 +166,8 @@
     <ClInclude Include="..\src\Common\Defines.h" />
     <ClInclude Include="..\src\Common\File.h" />
     <ClInclude Include="..\src\Common\Memory.h" />
-    <ClInclude Include="..\src\Common\RTTI.h" />
+    <ClInclude Include="..\src\common\MemSearch.h" />
+    <ClInclude Include="..\src\common\MemTools.h" />
     <ClInclude Include="..\src\Common\String.h" />
     <ClInclude Include="..\src\main\Detour.h" />
     <ClInclude Include="..\src\main\Exception.h" />

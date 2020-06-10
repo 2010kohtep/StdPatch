@@ -42,14 +42,17 @@
     <ClCompile Include="..\src\Common\Memory.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Common\RTTI.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Common\String.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\public\opcode_len_calc.cpp">
       <Filter>src\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\MemSearch.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\MemTools.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +86,6 @@
     <ClInclude Include="..\src\Common\Memory.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Common\RTTI.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Common\String.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -94,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="..\src\public\opcode_len_calc.h">
       <Filter>src\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\MemSearch.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\MemTools.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common/Memory.h"
+#include "common/MemSearch.h"
 #include "common/ArrayHelper.h"
 
 #include "main/SDK.h"
 
-extern TModule g_Base;
+extern IModule *gStudioExe;
 
 extern int g_nMAXSTUDIOVERTS_NEW;
 extern int g_nBUFFERSIZE_NEW;

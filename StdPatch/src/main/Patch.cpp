@@ -5,161 +5,190 @@
 
 void FindModules()
 {
-	g_Base = TModule(GetModuleHandleA(NULL));
+	gStudioExe = new CModule("");
 }
 
 bool Hook_MAXSTUDIOVERTS()
 {
-	const unsigned char abPattern[] = { 0x33, 0xFF, 0x68, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x68, 0xFF, 0xFF, 0xFF, 0xFF, 0x89 };
+	ISearchPattern *pattern;
+	void *addr;
 
 	if (!g_pMAXSTUDIOVERTS)
 		return false;
 
-	if (auto pAddr = Memory::FindPattern(g_Base, abPattern, sizeof(abPattern), 3))
+	pattern = gStudioExe->CreatePattern(addr);
 	{
-		Memory::WriteLong(pAddr, g_nMAXSTUDIOVERTS_NEW);
-		return true;
+		const unsigned char abPattern[] = { 0x33, 0xFF, 0x68, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x68, 0xFF, 0xFF, 0xFF, 0xFF, 0x89 };
+
+		pattern->FindPattern((void *)&abPattern, sizeof(abPattern), kPatternFlagsIgnoreFF);
+		pattern->Transpose(3);
 	}
 
-	return false;
+	if (addr)
+	{
+		WritePrimitive<uint32_t>(addr, g_nMAXSTUDIOVERTS_NEW);
+	}
+
+	return (addr != nullptr);
 }
 
 bool Patch_SanityCheckVertexBoneLODFlags()
 {
-	if (auto pAddr = Memory::FindPushOffset(g_Base, "Mismarked Bone flag"))
+	ISearchPattern *pattern;
+	void *addr;
+
+	pattern = gStudioExe->CreatePattern(addr);
 	{
-		pAddr = Memory::SkipNextCall(pAddr, 1, 0, false);
-		Memory::InsertCall(pAddr, SanityCheckVertexBoneLODFlags_MdlError);
-		return true;
+		pattern->FindAnsiString("Mismarked Bone flag", kPatternFlagsStringPartial | kPatternFlagsStringRef);
+		pattern->FindCall();
 	}
 
-	return false;
+	if (addr)
+	{
+		HookRegular(addr, SanityCheckVertexBoneLODFlags_MdlError);
+	}
+
+	return (addr != nullptr);
 }
 
 bool Find_IsInt24()
 {
-	if (auto pAddr = Memory::FindPushOffset(g_Base, "int24 conversion out of range %d"))
+	ISearchPattern *pattern;
+
+	pattern = gStudioExe->CreatePattern(g_pfnIsInt24);
 	{
-		if (pAddr = Memory::FindWordPtr(pAddr, 64, 0xEC8B, -1, true))
-		{
-			g_pfnIsInt24 = (TIsInt24)pAddr;
-			return true;
-		}
+		pattern->FindAnsiString("int24 conversion out of range %d\n", kPatternFlagsStringRef);
+		pattern->FindUInt16(0xEC8B, kPatternFlagsBack);
+		pattern->Transpose(-1);
 	}
 
-	return false;
+	return (g_pfnIsInt24 != nullptr);
 }
 
 bool Find_BUFFERSIZE()
 {
-	const unsigned char abPattern[] = { 0x89, 0x85, 0xFF, 0xFF, 0xFF, 0xFF, 0x83, 0xBD, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x74 };
+	ISearchPattern *pattern;
 
-	if (auto pAddr = Memory::FindPattern(g_Base, abPattern, sizeof(abPattern), sizeof(abPattern) + 1))
+	pattern = gStudioExe->CreatePattern(g_pBUFFERSIZE);
 	{
-		if (Memory::CheckByte(pAddr, 0x68, 0))
-		{
-			pAddr = Memory::Transpose(pAddr, 1);
-			g_pBUFFERSIZE = pAddr;
-			g_nBUFFERSIZE_DEF = *(int *)pAddr;
-			return true;
-		}
+		const unsigned char abPattern[] = { 0x89, 0x85, 0xFF, 0xFF, 0xFF, 0xFF, 0x83, 0xBD, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x74 };
+
+		pattern->FindPattern((void *)&abPattern, sizeof(abPattern), kPatternFlagsIgnoreFF);
+		pattern->Transpose(sizeof(abPattern) + 2);
 	}
 
-	return false;
+	if (g_pBUFFERSIZE)
+	{
+		g_nBUFFERSIZE_DEF = *(int *)g_pBUFFERSIZE;
+	}
+
+	return (g_pBUFFERSIZE != nullptr);
 }
 
 bool Find_MAXFLEXCONTROLLER()
 {
-	const unsigned char abPattern[] = { 0x81, 0xFA, 0x80, 0x00, 0x00, 0x00, 0x0F, 0x8D };
+	ISearchPattern *pattern;
 
-	if (auto pAddr = Memory::FindPattern(g_Base, abPattern, sizeof(abPattern), 2))
+	pattern = gStudioExe->CreatePattern(g_pMAXFLEXCONTROLLER);
 	{
-		g_pMAXFLEXCONTROLLER = pAddr;
-		g_nMAXFLEXCONTROLLER_NEW = *(int *)pAddr;
-		return true;
+		const unsigned char abPattern[] = { 0x81, 0xFA, 0x80, 0x00, 0x00, 0x00, 0x0F, 0x8D };
+
+		pattern->FindPattern((void *)&abPattern, sizeof(abPattern));
+		pattern->Transpose(2);
 	}
 
-	return false;
+	if (g_pMAXFLEXCONTROLLER)
+	{
+		g_nMAXFLEXCONTROLLER_NEW = *(int *)g_pMAXFLEXCONTROLLER;
+	}
+
+	return (g_pMAXFLEXCONTROLLER != nullptr);
 }
 
 bool Find_MAXSTUDIOVERTS()
 {
-	if (auto pAddr = Memory::FindPushOffset(g_Base, "Too many unified vertices"))
+	ISearchPattern *pattern;
+
+	pattern = gStudioExe->CreatePattern(g_pMAXSTUDIOVERTS);
 	{
-		if (Memory::CheckByte(pAddr, 0x81, -12))
-		{
-			pAddr = Memory::Transpose(pAddr, -6);
-			g_pMAXSTUDIOVERTS = pAddr;
-			g_nMAXSTUDIOVERTS_DEF = *(int *)pAddr;
-			return true;
-		}
+		pattern->FindAnsiString("Too many unified vertices\n", kPatternFlagsStringRef);
+		pattern->Transpose(-7);
 	}
 
-	return false;
+	if (g_pMAXSTUDIOVERTS)
+		g_nMAXSTUDIOVERTS_DEF = *(int *)g_pMAXSTUDIOVERTS;
+
+	return (g_pMAXSTUDIOVERTS != nullptr);
 }
 
 bool Find_VList()
 {
-	if (auto pAddr = (void *)g_pfnAddToVlist)
+	ISearchPattern *pattern;
+
+	pattern = gStudioExe->CreatePattern(g_pVList);
 	{
-		if (pAddr = Memory::FindWordPtr(pAddr, 64, 0x048B, 3, false))
-		{
-			g_pVList = *(void **)pAddr;
-			return true;
-		}
+		pattern->ForceOutput(g_pfnAddToVlist);
+		pattern->FindUInt16(0x048B);
+		pattern->Transpose(3);
+		pattern->Dereference();
 	}
 
-	return false;
+	return (g_pVList != nullptr);
 }
 
 bool Find_AddrToVlist()
 {
-	if (auto pAddr = Memory::FindPushOffset(g_Base, "Too many unified vertices\n"))
+	ISearchPattern *pattern;
+
+	pattern = gStudioExe->CreatePattern(g_pfnAddToVlist);
 	{
-		if (pAddr = Memory::FindWordPtr(pAddr, 256, 0xEC8B, -1, true))
-		{
-			g_pfnAddToVlist = (TAddToVlist)pAddr;
-			return true;
-		}
+		pattern->FindAnsiString("Too many unified vertices\n", kPatternFlagsStringRef);
+		pattern->FindUInt16(0xEC8B, kPatternFlagsBack);
+		pattern->Transpose(-1);
 	}
 
-	return false;
+	return (g_pfnAddToVlist != nullptr);
 }
 
 bool Hook_VerticesPtrs()
 {
+	int hooks;
+
 	g_VerticesPtrsNew.SetLength(g_nMAXSTUDIOVERTS_NEW);
+	hooks = gStudioExe->HookRefAddr(g_pVList, g_VerticesPtrsNew.GetData(), 0x00);
 
-	auto nCount = Memory::HookRefAddr(g_Base, g_pVList, g_VerticesPtrsNew.GetData(), 0x00);
+	if (!hooks)
+		g_VerticesPtrsNew.SetLength(0);
 
-	if (nCount != 0)
-		return true;
-
-	g_VerticesPtrsNew.SetLength(0);
-	return false;
+	return (hooks > 0);
 }
 
 bool Patch_WriteVTXFile()
 {
-	const unsigned char abPattern[] = { 0x89, 0x85, 0xFF, 0xFF, 0xFF, 0xFF, 0x83, 0xBD, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x74 };
+	ISearchPattern *pattern;
+	void *addr;
 
-	auto pAddr = Memory::Transpose(g_pBUFFERSIZE, sizeof(int));
-
-	if (pAddr = Memory::FindLongPtr(pAddr, 64, g_nBUFFERSIZE_DEF, 0, false))
+	pattern = gStudioExe->CreatePattern(addr);
 	{
-		Memory::WriteLong(g_pBUFFERSIZE, g_nBUFFERSIZE_NEW);
-		Memory::WriteLong(pAddr, g_nBUFFERSIZE_NEW);
-		return true;
+		pattern->ForceOutput(g_pBUFFERSIZE);
+		pattern->Transpose(4);
+		pattern->FindUInt32(g_nBUFFERSIZE_DEF);
 	}
 
-	return false;
+	if (addr)
+	{
+		WritePrimitive<uint32_t>(g_pBUFFERSIZE, g_nBUFFERSIZE_NEW);
+		WritePrimitive<uint32_t>(addr, g_nBUFFERSIZE_NEW);
+	}
+
+	return (addr != nullptr);
 }
 
 bool Patch_MAXFLEXCONTROLLER()
 {
 	if (g_pMAXFLEXCONTROLLER)
 	{
-		Memory::WriteLong(g_pMAXFLEXCONTROLLER, g_nMAXFLEXCONTROLLER_NEW);
+		WritePrimitive<uint32_t>(g_pMAXFLEXCONTROLLER, g_nMAXFLEXCONTROLLER_NEW);
 		return true;
 	}
 
@@ -168,33 +197,31 @@ bool Patch_MAXFLEXCONTROLLER()
 
 bool Hook_FlexController()
 {
-	const unsigned char abPattern[] = { 0x69, 0xC0, 0x08, 0x01, 0x00, 0x00, 0x68, 0x80, 0x00, 0x00, 0x00 };
+	ISearchPattern *pattern;
+	void *addr;
+	int hooks;
 
-	void *pAddr;
-	pAddr = Memory::FindPattern(g_Base, abPattern, sizeof(abPattern), sizeof(abPattern));
-	pAddr = Memory::FindBytePtr(pAddr, 128, 0x05, 1, false);
-
-	if (pAddr)
+	pattern = gStudioExe->CreatePattern(addr);
 	{
-		g_FlexControllerNew.SetLength(g_nMAXFLEXCONTROLLER_NEW);
+		const unsigned char abPattern[] = { 0x69, 0xC0, 0x08, 0x01, 0x00, 0x00, 0x68, 0x80, 0x00, 0x00, 0x00 };
 
-		pAddr = *(void **)pAddr;
-
-		if (Memory::HookRefAddr(g_Base, pAddr, g_FlexControllerNew.GetData(), 0x00) != 0)
-		{
-			g_FlexControllerNew.SetLength(0);
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		pattern->FindPattern((void *)&abPattern, sizeof(abPattern));
+		pattern->Transpose(sizeof(abPattern));
+		pattern->FindUInt8(0x05);
+		pattern->Transpose(1);
 	}
 
-	return false;
+	g_FlexControllerNew.SetLength(g_nMAXFLEXCONTROLLER_NEW);
+	addr = *(void **)addr;
+
+	hooks = gStudioExe->HookRefAddr(addr, g_FlexControllerNew.GetData(), 0x00);
+	if (!hooks)
+		g_FlexControllerNew.SetLength(0);
+
+	return (hooks > 0);
 }
 
 bool Hook_IsInt24()
 {
-	return Memory::HookRefCall(g_Base, g_pfnIsInt24, IsInt24) != 0;
+	return gStudioExe->HookRefCall(g_pfnIsInt24, IsInt24);
 }

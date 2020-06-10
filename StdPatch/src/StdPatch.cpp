@@ -1,7 +1,6 @@
 #include <Windows.h>
 
 #include "common/File.h"
-#include "common/RTTI.h"
 #include "common/Console.h"
 
 #include "main/Global.h"
@@ -18,7 +17,7 @@ void LoadConfig()
 	if (pszSlash)
 		*pszSlash = '\0';
 
-	strcat_s(szBuf, "\\stdpatch.ini");
+	strcat_s(szBuf, "\\StdPatch.ini");
 
 	if (FileExists(szBuf))
 	{
@@ -26,28 +25,34 @@ void LoadConfig()
 		g_nBUFFERSIZE_NEW = GetPrivateProfileIntA("Main", "BufferSize", (1024 * 1024 * 32), szBuf);
 		g_nMAXFLEXCONTROLLER_NEW = GetPrivateProfileIntA("Main", "FlexControllerSize", 400, szBuf);
 	}
+	else
+	{
+		DbgTrace("Warning! 'StdPatch.ini' configuration file could not be found, creating one with default values for patching.\n");
+
+		WritePrivateProfileStringA("Main", "MaxStudioVerts", "524288", szBuf);
+		WritePrivateProfileStringA("Main", "BufferSize", "33554432", szBuf);
+		WritePrivateProfileStringA("Main", "FlexControllerSize", "400", szBuf);
+	}
 }
 
 bool IsSFM()
 {
-	if (g_Base.pStart == nullptr)
+	if (!gStudioExe->GetLoaded())
 		return false;
 
-	return GetVTableForClass(g_Base, "CSFMBaseImporter") != nullptr;
+	return GetVTableForClass(gStudioExe->GetBase(), gStudioExe->GetLastByte(), "CSFMBaseImporter") != nullptr;
 }
 
 void PatchStudioMdl()
 {
-	DbgTrace("StudioMdl Patcher 2.1.0 is started.\n");
+	DbgTrace("StudioMdl Patcher 2.2.0 is started.\n");
 	DbgTrace("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
 	FindModules();
 
 	if (!IsSFM())
 	{
-		MessageBoxA(HWND_DESKTOP, "StdPatch available only for Source Filmmaker compiler. Aborting...", "Error",
-			MB_YESNO | MB_SYSTEMMODAL);
-
+		MessageBoxA(HWND_DESKTOP, "StdPatch is available only for Source Filmmaker compiler. Aborting...", "Error", MB_SYSTEMMODAL);
 		return;
 	}
 

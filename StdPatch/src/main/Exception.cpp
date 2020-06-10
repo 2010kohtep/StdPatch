@@ -1,6 +1,7 @@
 #include <windows.h>
 
-#include "common/RTTI.h"
+#include "common/MemSearch.h"
+
 #include "common/Console.h"
 #include "common/String.h"
 
@@ -53,7 +54,9 @@ bool __fastcall hkCStudioMDLApp_Create(void *pSelf)
 
 void InsertExceptionHandler()
 {
-	auto pVMT = GetVTableForClass(g_Base, "CStudioMDLApp");
-	orgCStudioMDLApp_Create = (TCStudioMDLAppCreate)pVMT[0];
-	Memory::WritePointer(&pVMT[0], hkCStudioMDLApp_Create);
+	void **pTable;
+
+	gStudioExe->CreatePattern(pTable)->FindVTable("CStudioMDLApp");
+	orgCStudioMDLApp_Create = reinterpret_cast<TCStudioMDLAppCreate>(pTable[0]);
+	WritePrimitive<void *>(&pTable[0], hkCStudioMDLApp_Create);
 }

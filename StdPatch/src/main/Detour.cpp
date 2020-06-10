@@ -32,31 +32,28 @@ void __fastcall COptimizedModel_WriteVTXFile(COptimizedModel *pSelf, int, studio
 
 void InsertDebugEvents()
 {
+	ISearchPattern *pattern;
+	void *pAddr;
+
 	//
 	// Hook COptimizedModel::WriteVTXFile method.
 	//
 
-	{
-		const unsigned char abPattern[] = { 0x55, 0x8B, 0xEC, 0x81, 0xEC, 0xC0, 0x00, 0x00, 0x00, 0x89 };
+	const uint8_t abPattern[] = { 0x55, 0x8B, 0xEC, 0x81, 0xEC, 0xC0, 0x00, 0x00, 0x00, 0x89 };
+	gStudioExe->CreatePattern(pAddr)->FindPattern((void *)&abPattern, sizeof(abPattern));
+	orgCOptimizedModel_WriteVTXFile = HookRegular(pAddr, COptimizedModel_WriteVTXFile);
 
-		if (auto pAddr = Memory::FindPattern(g_Base, abPattern, sizeof(abPattern), 0))
-		{
-			auto pfnTrampoline = Memory::HookRegular(pAddr, COptimizedModel_WriteVTXFile, 9);
-			orgCOptimizedModel_WriteVTXFile = TCOptimizedModel_WriteVTXFile(pfnTrampoline);
-		}
-	}
 
 	//
 	// Enable debug output for COptimizedModel::SortBonesWithinVertex method.
 	//
 
+	pattern = gStudioExe->CreatePattern(pAddr);
 	{
-		if (auto pAddr = Memory::FindLongPtr(g_Base, 0x2851B60F, 0, false))
-		{
-			if (pAddr = Memory::FindWordPtr(pAddr, 64, 0x006A, 1, false))
-			{
-				Memory::WriteByte(pAddr, 0x01);
-			}
-		}
+		pattern->FindUInt32(0x2851B60F);
+		pattern->FindUInt16(0x006A);
+		pattern->Transpose(1);
 	}
+
+	WritePrimitive<uint8_t>(pAddr, 0x01);
 }
