@@ -6,6 +6,7 @@
 #include "main/SDK.h"
 
 extern IModule *gStudioExe;
+extern IModule *gKernelDll;
 
 extern int g_nMAXSTUDIOVERTS_NEW;
 extern int g_nBUFFERSIZE_NEW;

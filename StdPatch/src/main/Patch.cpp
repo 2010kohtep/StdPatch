@@ -6,6 +6,7 @@
 void FindModules()
 {
 	gStudioExe = new CModule("");
+	gKernelDll = new CModule("KERNELBASE.dll");
 }
 
 bool Hook_MAXSTUDIOVERTS()

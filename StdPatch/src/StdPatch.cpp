@@ -43,6 +43,20 @@ bool IsSFM()
 	return GetVTableForClass(gStudioExe->GetBase(), gStudioExe->GetLastByte(), "CSFMBaseImporter") != nullptr;
 }
 
+VOID (WINAPI *orgOutputDebugStringA)(LPCSTR lpOutputString);
+
+VOID WINAPI hkOutputDebugStringA(LPCSTR lpOutputString)
+{
+	DbgTrace(lpOutputString);
+
+	orgOutputDebugStringA(lpOutputString);
+}
+
+void Hook_OutputDebugStringA()
+{
+	orgOutputDebugStringA = decltype(orgOutputDebugStringA)(gKernelDll->HookExport("OutputDebugStringA", hkOutputDebugStringA));
+
+}
 void PatchStudioMdl()
 {
 	DbgTrace("StudioMdl Patcher 2.2.0 is started.\n");
@@ -58,6 +72,7 @@ void PatchStudioMdl()
 
 	InsertExceptionHandler();
 	InsertDebugEvents();
+	Hook_OutputDebugStringA();
 
 	if (!Find_AddrToVlist())
 		FailedToFind("AddrToVlist()");

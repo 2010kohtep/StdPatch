@@ -1,6 +1,7 @@
 #include "main/Global.h"
 
 IModule *gStudioExe;
+IModule *gKernelDll;
 
 int g_nMAXSTUDIOVERTS_NEW    = 0x00F00000; // def - $80000
 int g_nBUFFERSIZE_NEW        = 0x02000000; // def - $2000000
