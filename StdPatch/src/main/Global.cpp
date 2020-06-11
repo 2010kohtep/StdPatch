@@ -27,6 +27,10 @@ void *g_pMAXMATERIALSCOUNT;
 
 TAddToVlist g_pfnAddToVlist;
 TIsInt24    g_pfnIsInt24;
+TCStudioMDLApp_Create g_pfnCStudioMDLApp_Create;
+TOutputDebugStringA g_gateOutputDebugStringA;
+
+void *pfnSanityCheckVertexBoneLODFlags_MdlError;
 
 void *g_pVList;
 void *g_pMaterialsList;

@@ -4,9 +4,8 @@
 #include "common/Console.h"
 
 #include "main/Global.h"
-#include "main/Patch.h"
-#include "main/Exception.h"
 #include "main/Detour.h"
+#include "main/Mods.h"
 
 void LoadConfig()
 {
@@ -51,94 +50,13 @@ bool IsSFM()
 	return GetVTableForClass(gStudioExe->GetBase(), gStudioExe->GetLastByte(), "CSFMBaseImporter") != nullptr;
 }
 
-VOID (WINAPI *orgOutputDebugStringA)(LPCSTR lpOutputString);
-
-VOID WINAPI hkOutputDebugStringA(LPCSTR lpOutputString)
-{
-	DbgTrace(lpOutputString);
-
-	orgOutputDebugStringA(lpOutputString);
-}
-
-void Hook_OutputDebugStringA()
-{
-	orgOutputDebugStringA = decltype(orgOutputDebugStringA)(gKernelDll->HookExport("OutputDebugStringA", hkOutputDebugStringA));
-}
-
-bool Find_MaterialsList()
-{
-	ISearchPattern *pattern;
-
-	pattern = gStudioExe->CreatePattern(g_pMaterialsList);
-	{
-		pattern->FindAnsiString("face %d references NULL texture %d\n", kPatternFlagsStringRef);
-		pattern->FindCall(0, true, true);
-		pattern->FindUInt16(0x868D);
-		pattern->Transpose(2);
-		pattern->Dereference();
-	}
-
-	if (!g_pMaterialsList)
-		return false;
-
-	pattern = gStudioExe->CreatePattern(g_pMaterialsListCheck);
-	{
-		pattern->FindAnsiString("Too many materials used, max %d\n", kPatternFlagsStringRef);
-	}
-
-	if (!g_pMaterialsListCheck)
-		return false;
-	
-	pattern = gStudioExe->CreatePattern(g_pMaterialsIndex);
-	{
-		const unsigned char acPattern[] = { 0x8B, 0x85, 0xC8, 0xFE, 0xFF, 0xFF, 0x83, 0xC4, 0x10 };
-
-		pattern->FindPattern((void *)&acPattern, sizeof(acPattern), kPatternFlagsIgnoreFF);
-		pattern->FindUInt16(0x8D04);
-		pattern->Transpose(2);
-		pattern->Dereference();
-	}
-
-	if (!g_pMaterialsIndex)
-		return false;
-
-	g_nMAXMATERIALSCOUNT_DEF = *(uint8_t *)Transpose(g_pMaterialsListCheck, -2);
-
-	return true;
-}
-
-bool Patch_MaterialsList()
-{
-	if (!g_pMaterialsList || !g_pMaterialsListCheck)
-		return false;
-
-	g_MaterialsList.SetLength(g_nMAXMATERIALSCOUNT_NEW);
-
-	if (gStudioExe->HookRefAddr(g_pMaterialsList, g_MaterialsList.GetData(), 0x00) == 0)
-	{
-		g_MaterialsList.SetLength(0);
-		return false;
-	}
-
-	g_MaterialsIndex.SetLength(g_nMAXMATERIALSCOUNT_NEW);
-
-	if (gStudioExe->HookRefAddr(g_pMaterialsIndex, g_MaterialsIndex.GetData(), 0x00) == 0)
-	{
-		g_MaterialsIndex.SetLength(0);
-		return false;
-	}
-
-	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -2);
-	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -6);
-	return true;
-}
-
 void PatchStudioMdl()
 {
 	DbgTrace("StudioMdl Patcher 2.4.0 is started.\n");
 	DbgTrace("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
-	FindModules();
+	gStudioExe = new CModule("");
+	gKernelDll = new CModule("KERNELBASE.dll");
 
 	if (!IsSFM())
 	{
@@ -146,68 +64,7 @@ void PatchStudioMdl()
 		return;
 	}
 
-	InsertExceptionHandler();
-	InsertDebugEvents();
-	Hook_OutputDebugStringA();
-
-	if (!Find_AddrToVlist())
-		FailedToFind("AddrToVlist()");
-	
-	if (!Find_VList())
-		FailedToFind("Vlist()");
-	
-	if (!Find_MAXSTUDIOVERTS())
-		FailedToFind("MAXSTUDIOVERTS");
-	else
-	{
-		if (!Hook_MAXSTUDIOVERTS())
-			FailedToHook("MAXSTUDIOVERTS");
-		else
-		{
-			if (!Hook_VerticesPtrs())
-				FailedToHook("VerticesPtrs");
-		}
-	}
-
-	if (!Find_IsInt24())
-		FailedToFind("IsInt24()");
-	else
-	{
-		if (!Hook_IsInt24())
-			FailedToHook("IsInt24()");
-	}
-	
-	if (!Find_BUFFERSIZE())
-		FailedToFind("BUFFERSIZE");
-	else
-	{
-		if (!Patch_WriteVTXFile())
-			FailedToPatch("WriteVTXFile()");
-	}
-
-#if 0
-	if (!Find_MAXFLEXCONTROLLER())
-		FailedToFind("MAXFLEXCONTROLLER");
-
-	if (!Patch_MAXFLEXCONTROLLER())
-		FailedToPatch("MAXFLEXCONTROLLER");
-
-	if (!Hook_FlexController())
-		FailedToHook("FlexController");
-#endif
-
-	if (!Patch_SanityCheckVertexBoneLODFlags())
-		FailedToFind("SanityCheckVertexBoneLODFlags()");
-
-	if (!Find_MaterialsList())
-		FailedToPatch("MaterialsList");
-	else
-	{
-		if (!Patch_MaterialsList())
-			FailedToHook("MaterialsList");
-	}
-
-	DbgTrace("\n");
+	gModMgr.InitMods();
 }
 
 BOOL WINAPI DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)
@@ -217,15 +74,15 @@ BOOL WINAPI DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID l
 
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
-		if (CreateMutexA(NULL, FALSE, "StdPatch") != (HANDLE)ERROR_ALREADY_EXISTS)
-		{
-			if (MessageBoxA(HWND_DESKTOP, "Enable stdpatch library functional?", "Question", 
-				MB_YESNO | MB_ICONQUESTION | MB_SYSTEMMODAL) == IDYES)
-			{
-				LoadConfig();
-				PatchStudioMdl();
-			}
-		}
+		if (CreateMutexA(NULL, FALSE, "StdPatch") == (HANDLE)ERROR_ALREADY_EXISTS)
+			return TRUE;
+
+		if (MessageBoxA(HWND_DESKTOP, "Enable stdpatch library functional?", "Question",
+			MB_YESNO | MB_ICONQUESTION | MB_SYSTEMMODAL) != IDYES)
+			return TRUE;
+
+		LoadConfig();
+		PatchStudioMdl();
 	}
 
 	return TRUE;

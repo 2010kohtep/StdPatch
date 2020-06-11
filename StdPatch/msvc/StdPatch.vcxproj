@@ -148,32 +148,25 @@
   <ItemGroup>
     <ClCompile Include="..\src\Common\Console.cpp" />
     <ClCompile Include="..\src\Common\File.cpp" />
-    <ClCompile Include="..\src\Common\Memory.cpp" />
     <ClCompile Include="..\src\common\MemSearch.cpp" />
     <ClCompile Include="..\src\common\MemTools.cpp" />
     <ClCompile Include="..\src\Common\String.cpp" />
     <ClCompile Include="..\src\main\Detour.cpp" />
-    <ClCompile Include="..\src\main\Exception.cpp" />
-    <ClCompile Include="..\src\main\Funcs.cpp" />
     <ClCompile Include="..\src\main\Global.cpp" />
-    <ClCompile Include="..\src\main\Patch.cpp" />
+    <ClCompile Include="..\src\main\Mods.cpp" />
     <ClCompile Include="..\src\public\opcode_len_calc.cpp" />
     <ClCompile Include="..\src\StdPatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Common\ArrayHelper.h" />
     <ClInclude Include="..\src\Common\Console.h" />
-    <ClInclude Include="..\src\Common\Defines.h" />
     <ClInclude Include="..\src\Common\File.h" />
-    <ClInclude Include="..\src\Common\Memory.h" />
     <ClInclude Include="..\src\common\MemSearch.h" />
     <ClInclude Include="..\src\common\MemTools.h" />
     <ClInclude Include="..\src\Common\String.h" />
     <ClInclude Include="..\src\main\Detour.h" />
-    <ClInclude Include="..\src\main\Exception.h" />
-    <ClInclude Include="..\src\main\Funcs.h" />
     <ClInclude Include="..\src\main\Global.h" />
-    <ClInclude Include="..\src\main\Patch.h" />
+    <ClInclude Include="..\src\main\Mods.h" />
     <ClInclude Include="..\src\main\SDK.h" />
     <ClInclude Include="..\src\public\opcode_len_calc.h" />
   </ItemGroup>

@@ -32,9 +32,15 @@ extern void *g_pMAXMATERIALSCOUNT;
 
 using TAddToVlist = void *(__cdecl *)(int a1, int a2, int a3, int a4);
 using TIsInt24 = bool(__cdecl *)(int nValue);
+using TCStudioMDLApp_Create = bool(__fastcall *)(void *that);
+using TOutputDebugStringA = VOID(WINAPI *)(LPCSTR lpOutputString);
 
 extern TAddToVlist g_pfnAddToVlist;
 extern TIsInt24 g_pfnIsInt24;
+extern TCStudioMDLApp_Create g_pfnCStudioMDLApp_Create;
+extern TOutputDebugStringA g_gateOutputDebugStringA;
+
+extern void *pfnSanityCheckVertexBoneLODFlags_MdlError;
 
 extern void *g_pVList;
 extern void *g_pMaterialsList;

@@ -21,25 +21,13 @@
     <ClCompile Include="..\src\main\Global.cpp">
       <Filter>src\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\main\Patch.cpp">
-      <Filter>src\main</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\main\Detour.cpp">
-      <Filter>src\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\Exception.cpp">
-      <Filter>src\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\main\Funcs.cpp">
       <Filter>src\main</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Common\Console.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Common\File.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Common\Memory.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Common\String.cpp">
@@ -54,15 +42,12 @@
     <ClCompile Include="..\src\common\MemTools.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\main\Mods.cpp">
+      <Filter>src\main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\main\Funcs.h">
-      <Filter>src\main</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\main\Global.h">
-      <Filter>src\main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\main\Patch.h">
       <Filter>src\main</Filter>
     </ClInclude>
     <ClInclude Include="..\src\main\SDK.h">
@@ -71,19 +56,10 @@
     <ClInclude Include="..\src\main\Detour.h">
       <Filter>src\main</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\main\Exception.h">
-      <Filter>src\main</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Common\Console.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Common\Defines.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Common\File.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Common\Memory.h">
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Common\String.h">
@@ -100,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="..\src\common\MemTools.h">
       <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\main\Mods.h">
+      <Filter>src\main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
