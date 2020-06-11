@@ -23,6 +23,7 @@ extern CArrayHelper<TVUnify *> g_VerticesPtrsNew;
 extern CArrayHelper<TVUnify> g_VerticesDataNew;
 extern CArrayHelper<TWeightList> g_WeightList;
 extern CArrayHelper<TMaterialInfo> g_MaterialsList;
+extern CArrayHelper<uint32_t> g_MaterialsIndex;
 
 extern void *g_pBUFFERSIZE;
 extern void *g_pMAXSTUDIOVERTS;
@@ -37,5 +38,6 @@ extern TIsInt24 g_pfnIsInt24;
 
 extern void *g_pVList;
 extern void *g_pMaterialsList;
+extern void *g_pMaterialsIndex;
 extern void *g_pMaterialsListCheck;
 extern void *g_pFlexController;

@@ -37,6 +37,12 @@ LONG NTAPI VectorExceptionFilter(_EXCEPTION_POINTERS *pException)
 		"\n",
 		pRecord->ExceptionCode, szBuf, hBase, pExceptionAddr, (void *)((int)pExceptionAddr - (int)hBase));
 
+	DbgTrace("EAX %.08X  EDX: %.08X  ECX: %.08X\nEDI: %.08X  ESI: %.08X\nEBX: %.08X  EBP: %.08X  ESP: %.08X  EIP: %.08X\n",
+		pContext->Eax, pContext->Edx, pContext->Ecx,
+		pContext->Edi, pContext->Esi,
+		pContext->Ebx, pContext->Ebp, pContext->Esp,
+		pContext->Eip);
+
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 

@@ -88,6 +88,19 @@ bool Find_MaterialsList()
 
 	if (!g_pMaterialsListCheck)
 		return false;
+	
+	pattern = gStudioExe->CreatePattern(g_pMaterialsIndex);
+	{
+		const unsigned char acPattern[] = { 0x8B, 0x85, 0xC8, 0xFE, 0xFF, 0xFF, 0x83, 0xC4, 0x10 };
+
+		pattern->FindPattern((void *)&acPattern, sizeof(acPattern), kPatternFlagsIgnoreFF);
+		pattern->FindUInt16(0x8D04);
+		pattern->Transpose(2);
+		pattern->Dereference();
+	}
+
+	if (!g_pMaterialsIndex)
+		return false;
 
 	g_nMAXMATERIALSCOUNT_DEF = *(uint8_t *)Transpose(g_pMaterialsListCheck, -2);
 
@@ -107,6 +120,14 @@ bool Patch_MaterialsList()
 		return false;
 	}
 
+	g_MaterialsIndex.SetLength(g_nMAXMATERIALSCOUNT_NEW);
+
+	if (gStudioExe->HookRefAddr(g_pMaterialsIndex, g_MaterialsIndex.GetData(), 0x00) == 0)
+	{
+		g_MaterialsIndex.SetLength(0);
+		return false;
+	}
+
 	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -2);
 	WritePrimitive<uint8_t>(g_pMaterialsListCheck, g_nMAXMATERIALSCOUNT_NEW, -6);
 	return true;
@@ -114,7 +135,7 @@ bool Patch_MaterialsList()
 
 void PatchStudioMdl()
 {
-	DbgTrace("StudioMdl Patcher 2.3.0 is started.\n");
+	DbgTrace("StudioMdl Patcher 2.4.0 is started.\n");
 	DbgTrace("Code by Alexander B. (2010kohtep) special for RED_EYE.\n");
 
 	FindModules();
