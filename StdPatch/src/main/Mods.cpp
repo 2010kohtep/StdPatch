@@ -30,35 +30,7 @@ void CModMgr::InitMods()
 	}
 }
 
-class CMod_AddrToVlist : public IMod
-{
-public:
-	CMod_AddrToVlist() : IMod() {}
-
-	virtual const char *GetName()
-	{
-		return "CMod_AddrToVlist";
-	}
-
-	virtual bool Find()
-	{
-		ISearchPattern *pattern;
-
-		pattern = gStudioExe->CreatePattern(g_pfnAddToVlist);
-		{
-			pattern->FindAnsiString("Too many unified vertices\n", kPatternFlagsStringRef);
-			pattern->FindUInt16(0xEC8B, kPatternFlagsBack);
-			pattern->Transpose(-1);
-		}
-
-		return (g_pfnAddToVlist != nullptr);
-	}
-
-	virtual bool Patch()
-	{
-		return true;
-	}
-};
+#pragma region Increase size of the array of vertices
 
 class CMod_VList : public IMod
 {
@@ -73,6 +45,16 @@ public:
 	virtual bool Find()
 	{
 		ISearchPattern *pattern;
+
+		pattern = gStudioExe->CreatePattern(g_pfnAddToVlist);
+		{
+			pattern->FindAnsiString("Too many unified vertices\n", kPatternFlagsStringRef);
+			pattern->FindUInt16(0xEC8B, kPatternFlagsBack);
+			pattern->Transpose(-1);
+		}
+
+		if (!g_pfnAddToVlist)
+			return false;
 
 		pattern = gStudioExe->CreatePattern(g_pVList);
 		{
@@ -101,6 +83,10 @@ public:
 		return (hooks > 0);
 	}
 };
+
+#pragma endregion
+
+#pragma region Increase size of the array of weights
 
 class CMod_MaxStudioVerts : public IMod
 {
@@ -153,6 +139,10 @@ public:
 	}
 };
 
+#pragma endregion
+
+#pragma region Suppress compiler crash in IsInt24 function
+
 int __cdecl hkIsInt24(int nValue)
 {
 	if (nValue < -0x800000 || nValue > 0x7FFFFF)
@@ -190,6 +180,10 @@ public:
 		return gStudioExe->HookRefCall(g_pfnIsInt24, hkIsInt24);
 	}
 };
+
+#pragma endregion
+
+#pragma region Increase file buffer size in WriteVTXFile function
 
 class CMod_WriteVTXFile : public IMod
 {
@@ -243,6 +237,10 @@ public:
 	}
 };
 
+#pragma endregion
+
+#pragma region Suppress "Mismarked Bone flag" error
+
 void __cdecl hkSanityCheckVertexBoneLODFlags_MdlError(const char *pszMsg, ...)
 {
 	DbgTrace("Mismarked Bone flag, but screw this :^)\n");
@@ -280,6 +278,10 @@ public:
 		return true;
 	}
 };
+
+#pragma endregion
+
+#pragma region Increase size of the materials array
 
 class CMod_MaterialsList : public IMod
 {
@@ -359,6 +361,10 @@ public:
 		return true;
 	}
 };
+
+#pragma endregion
+
+#pragma region Add vectored exception handler to catch new crashes
 
 LONG NTAPI VectorExceptionFilter(_EXCEPTION_POINTERS *pException)
 {
@@ -441,6 +447,10 @@ public:
 	}
 };
 
+#pragma endregion
+
+#pragma region Redirect OutputDebugStringA strings to compiler window
+
 VOID WINAPI hkOutputDebugStringA(LPCSTR lpOutputString)
 {
 	DbgTrace(lpOutputString);
@@ -469,10 +479,12 @@ public:
 	}
 };
 
-CMod_AddrToVlist gMod_AddrToVlist;
+#pragma endregion
+
 CMod_VList gMod_VList;
 CMod_MaxStudioVerts gMod_MaxStudioVerts;
 CMod_IsInt24 gMod_IsInt24;
 CMod_WriteVTXFile gMod_WriteVTXFile;
 CMod_SanityCheckVertexBoneLODFlags gMod_SanityCheckVertexBoneLODFlags;
 CMod_ExceptionHandler gMod_ExceptionHandler;
+CMod_ExtendedLog gMod_ExtendedLog;
