@@ -487,4 +487,5 @@ CMod_IsInt24 gMod_IsInt24;
 CMod_WriteVTXFile gMod_WriteVTXFile;
 CMod_SanityCheckVertexBoneLODFlags gMod_SanityCheckVertexBoneLODFlags;
 CMod_ExceptionHandler gMod_ExceptionHandler;
+CMod_MaterialsList gMod_MaterialsList;
 CMod_ExtendedLog gMod_ExtendedLog;
